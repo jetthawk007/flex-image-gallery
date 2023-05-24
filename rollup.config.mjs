@@ -26,6 +26,7 @@ const config = {
         }),
         serve({
             contentBase: 'dist',
+            port: 3003,
             historyApiFallback: true,
             livereload: true
         })

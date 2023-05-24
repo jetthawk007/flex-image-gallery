@@ -202,7 +202,7 @@ var OPTIONS = {
 
 function shuffle(array) {
     var _a;
-    var newArray = array; //array.slice();
+    var newArray = array.slice();
     for (var i = newArray.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         _a = [newArray[j], newArray[i]], newArray[i] = _a[0], newArray[j] = _a[1];
@@ -282,12 +282,20 @@ function getProtocol() {
     return location.protocol === "https:" ? "https://" : "http://";
 }
 
-(function (window, document, location, $, undefined$1) {
-    var $WINDOW = $(window);
-    var $DOCUMENT = $(document);
+var $WINDOW = $(window);
+var $DOCUMENT = $(document);
+var KEYBOARD_OPTIONS = {
+    left: true,
+    right: true,
+    down: false,
+    up: false,
+    space: false,
+    home: false,
+    end: false
+};
+(function (document, location, $) {
     var $BODY;
     var MOBILE = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i);
-    console.log("MOBILE", MOBILE);
     var TOUCH_TIMEOUT = 250;
     var SCROLL_LOCK_TIMEOUT = 1400;
     var AUTOPLAY_INTERVAL = 5000;
@@ -297,52 +305,7 @@ function getProtocol() {
     var NAV_DOT_FRAME_KEY = '$navDotFrame';
     var NAV_THUMB_FRAME_KEY = '$navThumbFrame';
     var AUTO = 'auto';
-    var KEYBOARD_OPTIONS = {
-        left: true,
-        right: true,
-        down: false,
-        up: false,
-        space: false,
-        home: false,
-        end: false
-    };
     var fullScreenApi = new FullScreenApi();
-    function noop() { }
-    function minMaxLimit(value, min, max) {
-        return Math.max(isNaN(min) ? -Infinity : min, Math.min(isNaN(max) ? Infinity : max, value));
-    }
-    function readTransform(css) {
-        return css.match(/ma/) && css.match(/-?\d+(?!d)/g)[css.match(/3d/) ? 12 : 4];
-    }
-    function readPosition($el) {
-        return +readTransform($el.css('transform'));
-    }
-    function getDuration(time) {
-        return { 'transition-duration': time + 'ms' };
-    }
-    function unlessNaN(value, alternative) {
-        return isNaN(value) ? alternative : value;
-    }
-    function numberFromMeasure(value, measure) {
-        return unlessNaN(+String(value).replace(measure || 'px', ''));
-    }
-    function numberFromPercent(value) {
-        return /%$/.test(value) ? numberFromMeasure(value, '%') : undefined$1;
-    }
-    function numberFromWhatever(value, whole) {
-        return unlessNaN(numberFromPercent(value) / 100 * whole, numberFromMeasure(value));
-    }
-    function measureIsValid(value) {
-        return (!isNaN(numberFromMeasure(value)) || !isNaN(numberFromMeasure(value, '%'))) && value;
-    }
-    function getPosByIndex(index, side, margin, baseIndex) {
-        console.log('getPosByIndex', index, side, margin, baseIndex);
-        console.log((index - (baseIndex || 0)) * (side + (margin || 0)));
-        return (index - (baseIndex || 0)) * (side + (margin || 0));
-    }
-    function getIndexByPos(pos, side, margin, baseIndex) {
-        return -Math.round(pos / (side + (margin || 0)) - (baseIndex || 0));
-    }
     function bindTransitionEnd($el) {
         var elData = $el.data();
         if (elData.tEnd)
@@ -609,9 +572,6 @@ function getProtocol() {
             }), { noMove: true });
         });
     }
-    function div(classes, child) {
-        return '<div class="' + classes + '">' + (child || '') + '</div>';
-    }
     function clone(array) {
         return Object.prototype.toString.call(array) == '[object Array]'
             && $.map(array, function (frame) {
@@ -630,18 +590,6 @@ function getProtocol() {
                 opts[key.toLowerCase()] = value;
             });
             return opts;
-        }
-    }
-    function getRatio(_ratio) {
-        if (!_ratio)
-            return;
-        var ratio = +_ratio;
-        if (!isNaN(ratio)) {
-            return ratio;
-        }
-        else {
-            ratio = _ratio.split('/');
-            return +ratio[0] / +ratio[1] || undefined$1;
         }
     }
     function addEvent(el, e, fn, bool) {
@@ -675,8 +623,8 @@ function getProtocol() {
     function parsePosition(rule) {
         rule = (rule + '').split(/\s+/);
         return {
-            x: measureIsValid(rule[0]) || FIFTYFIFTY,
-            y: measureIsValid(rule[1]) || FIFTYFIFTY
+            x: measureIsValid(rule[0]) || '50%',
+            y: measureIsValid(rule[1]) || '50%'
         };
     }
     function slide($el, options) {
@@ -995,7 +943,7 @@ function getProtocol() {
             .toggleClass(globalClasses.wrapNoControlsClass, !opts.controlsonstart);
         fotoramaData.fotorama = this;
         function checkForVideo() {
-            $.each(data, function (i, dataFrame) {
+            data.forEach(function (dataFrame) {
                 if (!dataFrame.i) {
                     dataFrame.i = dataFrameCount++;
                     var video = findVideoId(dataFrame.video, true);
@@ -1626,7 +1574,6 @@ function getProtocol() {
             pausedAutoplayFLAG = !!($videoPlaying || stoppedAutoplayFLAG);
         }
         function changeAutoplay() {
-            console.log('changeAutoplay');
             clearTimeout(changeAutoplay.t);
             waitFor.stop(changeAutoplay.w);
             if (!opts.autoplay || pausedAutoplayFLAG) {
@@ -1636,7 +1583,6 @@ function getProtocol() {
                 }
                 return;
             }
-            console.log('changeAutoplay continue');
             if (!that.autoplay) {
                 that.autoplay = true;
                 triggerEvent('startautoplay');
@@ -1829,7 +1775,7 @@ function getProtocol() {
                 $fotorama
                     .removeClass(globalClasses.fullscreenClass)
                     .insertAfter($anchor);
-                measures = $.extend({}, measuresStash);
+                measures = __assign({}, measuresStash);
                 unloadVideo($videoPlaying, true, true);
                 updateTouchTails('x', false);
                 that.resize();
@@ -2262,4 +2208,57 @@ function getProtocol() {
     $(function () {
         $(".".concat(globalClasses._fotoramaClass, ":not([data-auto=\"false\"])")).fotorama();
     });
-})(window, document, location, typeof jQuery !== 'undefined' && jQuery);
+})(document, location, typeof jQuery !== 'undefined' && jQuery);
+// Only function expression. Only utils func and clear functions
+// @todo move in separate file
+function noop() { }
+function minMaxLimit(value, min, max) {
+    return Math.max(isNaN(min) ? -Infinity : min, Math.min(isNaN(max) ? Infinity : max, value));
+}
+function readTransform(css) {
+    return css.match(/ma/) && css.match(/-?\d+(?!d)/g)[css.match(/3d/) ? 12 : 4];
+}
+function readPosition($el) {
+    return +readTransform($el.css('transform'));
+}
+function getDuration(time) {
+    return { 'transition-duration': time + 'ms' };
+}
+function unlessNaN(value, alternative) {
+    return isNaN(value) ? alternative : value;
+}
+function numberFromMeasure(value, measure) {
+    return unlessNaN(+String(value).replace(measure || 'px', ''));
+}
+function numberFromPercent(value) {
+    return /%$/.test(value) ? numberFromMeasure(value, '%') : undefined;
+}
+function numberFromWhatever(value, whole) {
+    return unlessNaN(numberFromPercent(value) / 100 * whole, numberFromMeasure(value));
+}
+function measureIsValid(value) {
+    return (!isNaN(numberFromMeasure(value)) || !isNaN(numberFromMeasure(value, '%'))) && value;
+}
+function getPosByIndex(index, side, margin, baseIndex) {
+    console.log('getPosByIndex', index, side, margin, baseIndex);
+    console.log((index - (baseIndex || 0)) * (side + (margin || 0)));
+    return (index - (baseIndex || 0)) * (side + (margin || 0));
+}
+function getIndexByPos(pos, side, margin, baseIndex) {
+    return -Math.round(pos / (side + (margin || 0)) - (baseIndex || 0));
+}
+function div(classes, child) {
+    return "<div class=\"".concat(classes, "\">").concat(child || '', "</div>");
+}
+function getRatio(_ratio) {
+    if (!_ratio)
+        return;
+    var ratio = +_ratio;
+    if (!isNaN(ratio)) {
+        return ratio;
+    }
+    else {
+        ratio = _ratio.split('/');
+        return +ratio[0] / +ratio[1] || undefined;
+    }
+}

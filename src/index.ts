@@ -11,13 +11,24 @@ import { getTranslate } from './position-utils';
 import {getProtocol} from './shared-utils'
 import './scss/gallery.scss';
 
-;(function (window, document, location, $, undefined) {
+const $WINDOW = $(window);
+const $DOCUMENT = $(document);
+
+const KEYBOARD_OPTIONS = {
+  left: true,
+  right: true,
+  down: false,
+  up: false,
+  space: false,
+  home: false,
+  end: false
+};
+
+;(function (document, location, $) {
   
-  const $WINDOW = $(window);
-  const $DOCUMENT = $(document);
+  
   let $BODY: Body;
   const MOBILE = navigator.userAgent.match(/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i);
-  console.log("MOBILE",MOBILE);
   
   const TOUCH_TIMEOUT = 250;
   const SCROLL_LOCK_TIMEOUT = 1400;
@@ -29,66 +40,11 @@ import './scss/gallery.scss';
   const NAV_THUMB_FRAME_KEY = '$navThumbFrame';
   const AUTO = 'auto';
   
-  const KEYBOARD_OPTIONS = {
-    left: true,
-    right: true,
-    down: false,
-    up: false,
-    space: false,
-    home: false,
-    end: false
-  };
+ 
 
   const fullScreenApi = new FullScreenApi();
 
-function noop () {}
 
-function minMaxLimit (value, min, max) {
-  return Math.max(isNaN(min) ? -Infinity : min, Math.min(isNaN(max) ? Infinity : max, value));
-}
-
-function readTransform (css) {
-  return css.match(/ma/) && css.match(/-?\d+(?!d)/g)[css.match(/3d/) ? 12 : 4];
-}
-
-function readPosition ($el) {
-    return +readTransform($el.css('transform'));
-}
-
-function getDuration (time) {
-  return {'transition-duration': time + 'ms'};
-}
-
-function unlessNaN (value, alternative) {
-  return isNaN(value) ? alternative : value;
-}
-
-function numberFromMeasure (value, measure) {
-  return unlessNaN(+String(value).replace(measure || 'px', ''));
-}
-
-function numberFromPercent (value) {
-  return /%$/.test(value) ? numberFromMeasure(value, '%') : undefined;
-}
-
-function numberFromWhatever (value, whole) {
-  return unlessNaN(numberFromPercent(value) / 100 * whole, numberFromMeasure(value));
-}
-
-function measureIsValid (value) {
-  return (!isNaN(numberFromMeasure(value)) || !isNaN(numberFromMeasure(value, '%'))) && value;
-}
-
-function getPosByIndex (index, side, margin, baseIndex) {
-  console.log('getPosByIndex', index, side, margin, baseIndex);
-  console.log((index - (baseIndex || 0)) * (side + (margin || 0)));
-
-  return (index - (baseIndex || 0)) * (side + (margin || 0));
-}
-
-function getIndexByPos (pos, side, margin, baseIndex) {
-  return -Math.round(pos / (side + (margin || 0)) - (baseIndex || 0));
-}
 
 function bindTransitionEnd ($el) {
   const elData = $el.data();
@@ -423,9 +379,6 @@ function smartClick ($el, fn, _options) {
   });
 }
 
-function div (classes, child) {
-  return '<div class="' + classes + '">' + (child || '') + '</div>';
-}
 
 
 function clone (array) {
@@ -449,17 +402,6 @@ function optionsToLowerCase (options) {
     });
 
     return opts;
-  }
-}
-
-function getRatio (_ratio) {
-  if (!_ratio) return;
-  var ratio = +_ratio;
-  if (!isNaN(ratio)) {
-    return ratio;
-  } else {
-    ratio = _ratio.split('/');
-    return +ratio[0] / +ratio[1] || undefined;
   }
 }
 
@@ -500,8 +442,8 @@ function getDirectionSign (forward) {
 function parsePosition (rule) {
   rule = (rule + '').split(/\s+/);
   return {
-    x: measureIsValid(rule[0]) || FIFTYFIFTY,
-    y: measureIsValid(rule[1]) || FIFTYFIFTY
+    x: measureIsValid(rule[0]) || '50%',
+    y: measureIsValid(rule[1]) || '50%'
   }
 }
 function slide ($el, options) {
@@ -1850,7 +1792,6 @@ const Fotorama = function ($fotorama, opts) {
   }
 
   function changeAutoplay () {
-    console.log('changeAutoplay');
 
     clearTimeout(changeAutoplay.t);
     waitFor.stop(changeAutoplay.w);
@@ -1860,11 +1801,9 @@ const Fotorama = function ($fotorama, opts) {
         that.autoplay = false;
         triggerEvent('stopautoplay');
       }
-
+      
       return;
     }
-
-    console.log('changeAutoplay continue');
 
     if (!that.autoplay) {
       that.autoplay = true;
@@ -2109,7 +2048,7 @@ const Fotorama = function ($fotorama, opts) {
           .removeClass(globalClasses.fullscreenClass)
           .insertAfter($anchor);
 
-      measures = $.extend({}, measuresStash);
+      measures = {...measuresStash};
 
       unloadVideo($videoPlaying, true, true);
 
@@ -2644,4 +2583,71 @@ $(() => {
 });
 
 
-})(window, document, location, typeof jQuery !== 'undefined' && jQuery);
+})(document, location, typeof jQuery !== 'undefined' && jQuery);
+
+
+// Only function expression. Only utils func and clear functions
+// @todo move in separate file
+function noop () {}
+
+function minMaxLimit (value, min, max) {
+  return Math.max(isNaN(min) ? -Infinity : min, Math.min(isNaN(max) ? Infinity : max, value));
+}
+
+function readTransform (css) {
+  return css.match(/ma/) && css.match(/-?\d+(?!d)/g)[css.match(/3d/) ? 12 : 4];
+}
+
+function readPosition ($el) {
+    return +readTransform($el.css('transform'));
+}
+
+function getDuration (time) {
+  return {'transition-duration': time + 'ms'};
+}
+
+function unlessNaN (value, alternative) {
+  return isNaN(value) ? alternative : value;
+}
+
+function numberFromMeasure (value, measure) {
+  return unlessNaN(+String(value).replace(measure || 'px', ''));
+}
+
+function numberFromPercent (value) {
+  return /%$/.test(value) ? numberFromMeasure(value, '%') : undefined;
+}
+
+function numberFromWhatever (value, whole) {
+  return unlessNaN(numberFromPercent(value) / 100 * whole, numberFromMeasure(value));
+}
+
+function measureIsValid (value) {
+  return (!isNaN(numberFromMeasure(value)) || !isNaN(numberFromMeasure(value, '%'))) && value;
+}
+
+function getPosByIndex (index, side, margin, baseIndex) {
+  console.log('getPosByIndex', index, side, margin, baseIndex);
+  console.log((index - (baseIndex || 0)) * (side + (margin || 0)));
+
+  return (index - (baseIndex || 0)) * (side + (margin || 0));
+}
+
+function getIndexByPos (pos, side, margin, baseIndex) {
+  return -Math.round(pos / (side + (margin || 0)) - (baseIndex || 0));
+}
+
+function div(classes: string, child?: string): string {
+  return `<div class="${classes}">${child || ''}</div>`;
+}
+
+function getRatio (_ratio) {
+  if (!_ratio) return;
+  var ratio = +_ratio;
+  if (!isNaN(ratio)) {
+    return ratio;
+  } else {
+    ratio = _ratio.split('/');
+    return +ratio[0] / +ratio[1] || undefined;
+  }
+}
