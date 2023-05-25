@@ -1,0 +1,46 @@
+export interface Options {
+    width: number;
+    minwidth: null | number;
+    maxwidth: string;
+    height: null | number;
+    minheight: null | number;
+    maxheight: null | number;
+    ratio: string;
+    margin: number;
+    glimpse: number;
+    fit: string;
+    position: string;
+    thumbposition: string;
+    nav: string;
+    navposition: string;
+    navwidth: null | number;
+    thumbwidth: number;
+    thumbheight: number;
+    thumbmargin: number;
+    thumbborderwidth: number;
+    thumbfit: string;
+    allowfullscreen: string;
+    transition: string;
+    clicktransition: string;
+    transitionduration: number;
+    captions: boolean;
+    hash: boolean;
+    startindex: number;
+    loop: boolean;
+    autoplay: boolean;
+    stopautoplayontouch: boolean;
+    keyboard: boolean;
+    arrows: boolean;
+    click: boolean;
+    swipe: boolean;
+    trackpad: boolean;
+    enableifsingleframe: boolean;
+    controlsonstart: boolean;
+    shuffle: boolean;
+    direction: string;
+    shadows: boolean;
+    spinner: null | string;
+    auto: boolean;
+    urtext: string;
+  }
+  

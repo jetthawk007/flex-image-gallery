@@ -1,10 +1,10 @@
 //@ts-nocheck
-import {setVideoIFrame} from './templates'
+import { setVideoIFrame } from './templates'
 import { getVendorPrefixedName } from './crossbrowser_utils'
 import { FullScreenApi } from './FullscreenAPI';
 import { WaitFor, waitFor } from './utils';
 import { isHidden } from './elements';
-import { OPTIONS, FIFTYFIFTY,TRANSITION_DURATION } from './options';
+import { OPTIONS, TRANSITION_DURATION } from './options';
 import { shuffle } from './methods';
 import globalClasses from './classses'
 import { getTranslate } from './position-utils';
@@ -91,7 +91,7 @@ function afterTransition ($el, property, fn, time) {
 }
 
 
-function stop ($el, left/*, _001*/) {
+function stop ($el, left) {
   if ($el.length) {
     var elData = $el.data();
     $el.css(getDuration(0));
@@ -101,7 +101,7 @@ function stop ($el, left/*, _001*/) {
       return readPosition($el);
     });
 
-    $el.css(getTranslate(lockedLeft/*, _001*/));//.width(); // `.width()` for reflow
+    $el.css(getTranslate(lockedLeft));
     return lockedLeft;
   }
 }
@@ -394,17 +394,6 @@ function lockScroll ($el, left, top) {
     .scrollTop(top || 0);
 }
 
-function optionsToLowerCase (options) {
-  if (options) {
-    var opts = {};
-    $.each(options, function (key, value) {
-      opts[key.toLowerCase()] = value;
-    });
-
-    return opts;
-  }
-}
-
 function addEvent (el, e, fn, bool) {
   if (!e) return;
   el.addEventListener ? el.addEventListener(e, fn, !!bool) : el.attachEvent('on'+e, fn);
@@ -433,10 +422,6 @@ function addFocus (el, fn) {
 function stopEvent (e, stopPropagation) {
   e.preventDefault ? e.preventDefault() : (e.returnValue = false);
   stopPropagation && e.stopPropagation && e.stopPropagation();
-}
-
-function getDirectionSign (forward) {
-  return forward ? '>' : '<';
 }
 
 function parsePosition (rule) {
@@ -884,10 +869,11 @@ function wheel ($el, options) {
 const Fotorama = function ($fotorama, opts) {
   $BODY = $('body');
 
-  var that = this,
-      stamp = $.now(),
-      stampClass = globalClasses._fotoramaClass + stamp,
-      fotorama = $fotorama[0],
+  const that = this;
+  const stamp = Date.now();
+  const stampClass = `${globalClasses._fotoramaClass}${stamp}`;
+
+  var fotorama = $fotorama[0],
       data,
       dataFrameCount = 1,
       fotoramaData = $fotorama.data(),
@@ -942,7 +928,6 @@ const Fotorama = function ($fotorama, opts) {
       o_shadows,
       o_rtl,
       o_keyboard,
-      lastOptions = {},
 
       measures = {},
       measuresSetFLAG,
@@ -1029,9 +1014,9 @@ const Fotorama = function ($fotorama, opts) {
     if (FLAG) {
       $DOCUMENT
           .on(keydownLocal, function (e) {
-            var catched,
-                index;
-
+            let catched;
+            let index;
+            
             if ($videoPlaying && e.keyCode === 27) {
               catched = true;
               unloadVideo($videoPlaying, true, true);
@@ -1069,17 +1054,20 @@ const Fotorama = function ($fotorama, opts) {
     }
   }
 
-  function appendElements (FLAG) {
-    if (FLAG === appendElements.f) return;
+  function appendElements (FLAG: boolean): void {
+   
+    if (FLAG === appendElements.flag) return;
 
     if (FLAG) {
       $fotorama
           .html('')
-          .addClass(globalClasses._fotoramaClass + ' ' + stampClass)
+          .addClass(`${globalClasses._fotoramaClass} ${stampClass}`)
           .append($wrap)
           .before($anchor);
 
-      addInstance(that);
+        console.log(that);
+          
+      // addInstance(that);
     } else {
       $wrap.detach();
       $anchor.detach();
@@ -1087,11 +1075,11 @@ const Fotorama = function ($fotorama, opts) {
           .html(fotoramaData.urtext)
           .removeClass(stampClass);
 
-      hideInstance(that);
+      // hideInstance(that);
     }
 
     bindGlobalEvents(FLAG);
-    appendElements.f = FLAG;
+    appendElements.flag = FLAG;
   }
 
   function setData () {
@@ -1123,7 +1111,7 @@ const Fotorama = function ($fotorama, opts) {
   function setOptions () {
     that.options = opts = optionsToLowerCase(opts);
 
-    o_fade = (opts.transition === 'crossfade' || opts.transition === 'dissolve');
+    o_fade = !['crossfade', 'dissolve'].includes(opts.transition);
 
     o_loop = opts.loop && (size > 2 || (o_fade && (!o_transition || o_transition !== 'slide')));
 
@@ -1170,8 +1158,6 @@ const Fotorama = function ($fotorama, opts) {
 
       $navFrame = $navThumbFrame;
       navFrameKey = NAV_THUMB_FRAME_KEY;
-
-      // setStyle($style, insertStyle({w: o_thumbSide, h: '64px', b: opts.thumbborderwidth, m: opts.thumbmargin, s: stamp}));
 
       $nav
           .addClass(globalClasses.navThumbsClass)
@@ -1222,8 +1208,6 @@ const Fotorama = function ($fotorama, opts) {
     $wrap
         .addClass(classes.add.join(' '))
         .removeClass(classes.remove.join(' '));
-
-    lastOptions = $.extend({}, opts);
   }
 
   function normalizeIndex (index) {
@@ -1400,8 +1384,6 @@ const Fotorama = function ($fotorama, opts) {
       }
 
       function waitAndLoad() {
-        console.log('waitAndLoad');
-        
         var i = 10;
         const waitForLoad = new WaitFor(
           () => !touchedFLAG || !i-- && !MOBILE,
@@ -1421,7 +1403,6 @@ const Fotorama = function ($fotorama, opts) {
           if ($.Fotorama.cache[src] === 'error') {
             error();
           } else if ($.Fotorama.cache[src] === 'loaded') {
-            console.log('take from cache: ' + src);
             setTimeout(waitAndLoad, 0);
           } else {
             setTimeout(justWait, 100);
@@ -1787,7 +1768,6 @@ const Fotorama = function ($fotorama, opts) {
   }
 
   function releaseAutoplay () {
-    console.log('releaseAutoplay');
     pausedAutoplayFLAG = !!($videoPlaying || stoppedAutoplayFLAG);
   }
 
@@ -1856,9 +1836,7 @@ const Fotorama = function ($fotorama, opts) {
   };
 
   that.show = function (options) {
-    console.log('that.show');
-    console.time('that.show prepare');
-    var index;
+    let index: number;    
 
     if (typeof options !== 'object') {
       index = options;
@@ -1893,27 +1871,16 @@ const Fotorama = function ($fotorama, opts) {
 
     var silent = _activeFrame === activeFrame && !options.user;
 
-    console.time('unloadVideo');
     unloadVideo($videoPlaying, activeFrame.i !== data[normalizeIndex(repositionIndex)].i);
-    console.timeEnd('unloadVideo');
-    console.time('frameDraw');
     frameDraw(activeIndexes, 'stage');
-    console.timeEnd('frameDraw');
-    console.time('stageFramePosition');
     stageFramePosition(MOBILE ? [dirtyIndex] : [dirtyIndex, getPrevIndex(dirtyIndex), getNextIndex(dirtyIndex)]);
-    console.timeEnd('stageFramePosition');
-    console.time('updateTouchTails');
     updateTouchTails('go', true);
-    console.timeEnd('updateTouchTails');
-    console.time('triggerEvent');
 
     silent || triggerEvent('show', {
       user: options.user,
       time: time
     });
-    console.timeEnd('triggerEvent');
 
-    console.time('bind onEnd');
 
     pausedAutoplayFLAG = true;
 
@@ -1948,7 +1915,6 @@ const Fotorama = function ($fotorama, opts) {
       releaseAutoplay();
       changeAutoplay();
     };
-    console.timeEnd('bind onEnd');
 
     if (!o_fade) {
       console.time('slide');
@@ -1971,9 +1937,7 @@ const Fotorama = function ($fotorama, opts) {
       }, fadeStack);
     }
 
-    console.time('arrsUpdate');
     arrsUpdate();
-    console.timeEnd('arrsUpdate');
 
     if (o_nav) {
       console.time('navUpdate');
@@ -1990,13 +1954,9 @@ const Fotorama = function ($fotorama, opts) {
       console.timeEnd('slideThumbBorder');
     }
 
-    console.time('that.show end');
     showedFLAG = typeof lastActiveIndex !== 'undefined' && lastActiveIndex !== activeIndex;
     lastActiveIndex = activeIndex;
     opts.hash && showedFLAG && !that.eq && setHash(activeFrame.id || activeIndex + 1);
-    console.timeEnd('that.show end');
-
-    console.timeEnd('that.show');
 
     return this;
   };
@@ -2105,7 +2065,6 @@ const Fotorama = function ($fotorama, opts) {
       measures.nw = o_nav && numberFromWhatever(opts.navwidth, width) || width;
 
       if (opts.glimpse) {
-        // Glimpse
         measures.w -= Math.round((numberFromWhatever(opts.glimpse, width) || 0) * 2);
       }
 
@@ -2265,7 +2224,6 @@ const Fotorama = function ($fotorama, opts) {
     clearTimeout(clickToShow.t);
 
     if (opts.clicktransition && opts.clicktransition !== opts.transition) {
-      console.log('change transition to: ' + opts.clicktransition);
 
       // this timeout is for yield events flow
       setTimeout(function () {
@@ -2318,8 +2276,6 @@ const Fotorama = function ($fotorama, opts) {
     onTouchEnd: onTouchEnd,
     onEnd: function (result) {
       setShadow($stage);
-
-      console.log('result', result);
 
       var toggleControlsFLAG = result.touch && opts.arrows && opts.arrows !== 'always';
 
@@ -2555,23 +2511,23 @@ $.fn.fotorama = function (opts) {
   });
 };
 $.Fotorama = {}
-$.Fotorama.instances = [];
+// $.Fotorama.instances = [];
 
-function calculateIndexes () {
-  $.each($.Fotorama.instances, function (index, instance) {
-    instance.index = index;
-  });
-}
+// function calculateIndexes () {
+//   $.each($.Fotorama.instances, function (index, instance) {
+//     instance.index = index;
+//   });
+// }
 
-function addInstance (instance) {
-  $.Fotorama.instances.push(instance);
-  calculateIndexes();
-}
+// function addInstance (instance) {
+//   $.Fotorama.instances.push(instance);
+//   calculateIndexes();
+// }
 
-function hideInstance (instance) {
-  $.Fotorama.instances.splice(instance.index, 1);
-  calculateIndexes();
-}
+// function hideInstance (instance) {
+//   $.Fotorama.instances.splice(instance.index, 1);
+//   calculateIndexes();
+// }
 $.Fotorama.cache = {};
 $.Fotorama.measures = {};
 $ = $ || {};
@@ -2579,7 +2535,7 @@ $.Fotorama = $.Fotorama || {};
 
 
 $(() => {
-  $(`.${globalClasses._fotoramaClass}:not([data-auto="false"])`).fotorama();
+  $(`.${globalClasses._fotoramaClass}`).fotorama();
 });
 
 
@@ -2651,3 +2607,17 @@ function getRatio (_ratio) {
     return +ratio[0] / +ratio[1] || undefined;
   }
 }
+
+function getDirectionSign(forward: boolean): '>' | '<' {
+  return forward ? '>' : '<';
+}
+
+export function optionsToLowerCase(options: Record<string, any>): Record<string, any> {
+  const opts: Record<string, any> = {};
+
+  Object.entries(options).forEach(([key, value]) => {
+    opts[key.toLowerCase()] = value;
+  });
+
+  return opts;
+};
