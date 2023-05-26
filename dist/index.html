@@ -11,16 +11,8 @@
 </head>
 
 <body>
-  <div class="fotorama"
-    data-allowfullscreen="native"
-    data-width="700"
-    data-ratio="700/467"
-    data-nav="dots"
-    data-auto="true"
-    data-autoplay="false"
-    data-shuffle="false"
-    data-clicktransition="crossfade"
-    data-transition="slide"
+  <div class="fotorama" data-allowfullscreen="native" data-width="700" data-ratio="700/467" data-nav="dots"
+    data-auto="true" data-autoplay="false" data-shuffle="false" data-clicktransition="crossfade" data-transition="slide"
     data-max-width="100%">
     <img src="./img1.jpg" alt="Test Car Image Caption">
     <a href="https://www.youtube.com/watch?v=rqUmm_AMa_0">Desert Rose</a>
@@ -38,17 +30,9 @@
   </div>
 
   <div style="position: absolute; width: 300px; height: 300px;">
-    <div class="fotorama"
-      data-allowfullscreen="true"
-      data-width="700"
-      data-ratio="700/467"
-      data-nav="thumbs"
-      data-auto="true"
-      data-autoplay="false"
-      data-shuffle="true"
-      data-clicktransition="crossfade"
-      data-transition="dissolve"
-      data-max-width="100%">
+    <div class="fotorama" data-allowfullscreen="true" data-width="700" data-ratio="700/467" data-nav="thumbs"
+      data-auto="true" data-autoplay="true" data-shuffle="true" data-clicktransition="crossfade"
+      data-transition="dissolve" data-max-width="100%">
       <img src="./img1.jpg" alt="Test Car Image Caption">
       <a href="https://www.youtube.com/watch?v=rqUmm_AMa_0">Desert Rose</a>
       <img src="./img2.jpg" alt="">
@@ -68,12 +52,12 @@
 
 <script>
   $('.fotorama')
-  .on('fotorama:fullscreenenter', (instance) => {
-    console.log("CUSTOMEVENT:fullscreenenter")
-  })
-  .on('fotorama:showend', (data) => {
-    console.log("CUSTOMEVENT:showend", data)
-  })
+    .on('fotorama:fullscreenenter', (instance) => {
+      console.log("CUSTOMEVENT:fullscreenenter")
+    })
+    .on('fotorama:showend', (data) => {
+      console.log("CUSTOMEVENT:showend", data)
+    })
 </script>
 
 </html>

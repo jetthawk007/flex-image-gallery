@@ -7,7 +7,7 @@ interface IFullScreenApi {
     cancelFullScreen(): void;
 }
 
-export class FullScreenApi implements IFullScreenApi{
+class FullScreenApi implements IFullScreenApi {
     ok: boolean;
     prefix: string;
     event: string;
@@ -26,9 +26,9 @@ export class FullScreenApi implements IFullScreenApi{
                 const prefix = browserPrefixes[i];
                 //@ts-ignore
                 if (typeof document[`${prefix}CancelFullScreen`] !== "undefined") {
-                this.ok = true;
-                this.prefix = prefix;
-                break;
+                    this.ok = true;
+                    this.prefix = prefix;
+                    break;
                 }
             }
         }
@@ -52,17 +52,17 @@ export class FullScreenApi implements IFullScreenApi{
     }
 
     requestFullScreen(el: any): void {
-        console.log(this.prefix);
-        
         return this.prefix === ""
-        ? el.requestFullscreen()
-        : el[`${this.prefix}RequestFullScreen`]();
+            ? el.requestFullscreen()
+            : el[`${this.prefix}RequestFullScreen`]();
     }
 
     cancelFullScreen(): void {
         return this.prefix === ""
-        ? document.exitFullscreen()
-        //@ts-ignore
-        : document[`${this.prefix}CancelFullScreen`]();
+            ? document.exitFullscreen()
+            //@ts-ignore
+            : document[`${this.prefix}CancelFullScreen`]();
     }
 }
+
+export const fullScreenApi = new FullScreenApi()

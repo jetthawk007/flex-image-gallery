@@ -18,7 +18,7 @@ const config = {
         }),
         commonjs(),
         nodeResolve(),
-        scss({ 
+        scss({
             output: 'bundle.css',
             output: function (styles) {
                 fs.writeFileSync('dist/bundle.css', styles)

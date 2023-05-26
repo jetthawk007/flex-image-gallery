@@ -24,7 +24,6 @@ var __assign = function() {
     return __assign.apply(this, arguments);
 };
 
-//@todo deprecated
 function setVideoIFrame(v) {
     return "\n        <div class=\"fotorama__video\">\n            <iframe\n            src=".concat("".concat(v.p +
         (v.type === "youtube"
@@ -86,7 +85,6 @@ var FullScreenApi = /** @class */ (function () {
         }
     };
     FullScreenApi.prototype.requestFullScreen = function (el) {
-        console.log(this.prefix);
         return this.prefix === ""
             ? el.requestFullscreen()
             : el["".concat(this.prefix, "RequestFullScreen")]();
@@ -99,6 +97,7 @@ var FullScreenApi = /** @class */ (function () {
     };
     return FullScreenApi;
 }());
+var fullScreenApi = new FullScreenApi();
 
 //@ts-nocheck
 var WaitFor = /** @class */ (function () {
@@ -210,68 +209,69 @@ function shuffle(array) {
     return newArray;
 }
 
+var rootElement = 'fotorama';
 var globalClasses = {
-    _fotoramaClass: 'fotorama',
-    _fullscreenClass: 'fullscreen',
-    wrapClass: 'fotorama__wrap',
-    wrapVideoClass: 'fotorama__wrap--video',
-    wrapFadeClass: 'fotorama__wrap--fade',
-    wrapSlideClass: 'fotorama__wrap--slide',
-    wrapNoControlsClass: 'fotorama__wrap--no-controls',
-    wrapNoShadowsClass: 'fotorama__wrap--no-shadows',
-    wrapRtlClass: 'fotorama__wrap--rtl',
-    wrapOnlyActiveClass: 'fotorama__wrap--only-active',
-    wrapNoCaptionsClass: 'fotorama__wrap--no-captions',
-    wrapToggleArrowsClass: 'fotorama__wrap--toggle-arrows',
-    stageClass: 'fotorama__stage',
-    stageFrameClass: 'fotorama__stage__frame',
-    stageFrameVideoClass: 'fotorama__stage__frame--video',
-    stageShaftClass: 'fotorama__stage__shaft',
-    grabClass: 'fotorama__grab',
-    pointerClass: 'fotorama__pointer',
-    arrClass: 'fotorama__arr',
-    arrDisabledClass: 'fotorama__arr--disabled',
-    arrPrevClass: 'fotorama__arr--prev',
-    arrNextClass: 'fotorama__arr--next',
-    navClass: 'fotorama__nav',
-    navWrapClass: 'fotorama__nav-wrap',
-    navShaftClass: 'fotorama__nav__shaft',
-    navDotsClass: 'fotorama__nav--dots',
-    navThumbsClass: 'fotorama__nav--thumbs',
-    navFrameClass: 'fotorama__nav__frame',
-    navFrameDotClass: 'fotorama__nav__frame--dot',
-    navFrameThumbClass: 'fotorama__nav__frame--thumb',
-    fadeClass: 'fotorama__fade',
-    fadeFrontClass: 'fotorama__fade-front',
-    fadeRearClass: 'fotorama__fade-rear',
-    shadowClass: 'fotorama__shadow',
-    shadowsClass: 'fotorama__shadows',
-    shadowsLeftClass: 'fotorama__shadow--left',
-    shadowsRightClass: 'fotorama__shadow--right',
-    activeClass: 'fotorama__active',
-    selectClass: 'fotorama__select',
-    hiddenClass: 'fotorama--hidden',
-    fullscreenClass: 'fotorama--fullscreen',
-    fullscreenIconClass: 'fotorama__fullscreen-icon',
-    errorClass: 'fotorama__error',
-    loadingClass: 'fotorama__loading',
-    loadedClass: 'fotorama__loaded',
-    loadedFullClass: 'fotorama__loaded--full',
-    loadedImgClass: 'fotorama__loaded--img',
-    grabbingClass: 'fotorama__grabbing',
-    imgClass: 'fotorama__img',
-    imgFullClass: 'fotorama__img--full',
-    dotClass: 'fotorama__dot',
-    thumbClass: 'fotorama__thumb',
-    thumbBorderClass: 'fotorama__thumb-border',
-    htmlClass: 'fotorama__html',
-    videoClass: 'fotorama__video',
-    videoPlayClass: 'fotorama__video-play',
-    videoCloseClass: 'fotorama__video-close',
-    captionClass: 'fotorama__caption',
-    captionWrapClass: 'fotorama__caption__wrap',
-    spinnerClass: 'fotorama__spinner',
-    buttonAttributes: '" tabindex:"0" role:"button',
+    rootElement: rootElement,
+    _fullscreenClass: "".concat(rootElement, "-fullscreen"),
+    wrapClass: "".concat(rootElement, "__wrap"),
+    wrapVideoClass: "".concat(rootElement, "__wrap--video"),
+    wrapFadeClass: "".concat(rootElement, "__wrap--fade"),
+    wrapSlideClass: "".concat(rootElement, "__wrap--slide"),
+    wrapNoControlsClass: "".concat(rootElement, "__wrap--no-controls"),
+    wrapNoShadowsClass: "".concat(rootElement, "__wrap--no-shadows"),
+    wrapRtlClass: "".concat(rootElement, "__wrap--rtl"),
+    wrapOnlyActiveClass: "".concat(rootElement, "__wrap--only-active"),
+    wrapNoCaptionsClass: "".concat(rootElement, "__wrap--no-captions"),
+    wrapToggleArrowsClass: "".concat(rootElement, "__wrap--toggle-arrows"),
+    stageClass: "".concat(rootElement, "__stage"),
+    stageFrameClass: "".concat(rootElement, "__stage__frame"),
+    stageFrameVideoClass: "".concat(rootElement, "__stage__frame--video"),
+    stageShaftClass: "".concat(rootElement, "__stage__shaft"),
+    grabClass: "".concat(rootElement, "__grab"),
+    pointerClass: "".concat(rootElement, "__pointer"),
+    arrClass: "".concat(rootElement, "__arr"),
+    arrDisabledClass: "".concat(rootElement, "__arr--disabled"),
+    arrPrevClass: "".concat(rootElement, "__arr--prev"),
+    arrNextClass: "".concat(rootElement, "__arr--next"),
+    navClass: "".concat(rootElement, "__nav"),
+    navWrapClass: "".concat(rootElement, "__nav-wrap"),
+    navShaftClass: "".concat(rootElement, "__nav__shaft"),
+    navDotsClass: "".concat(rootElement, "__nav--dots"),
+    navThumbsClass: "".concat(rootElement, "__nav--thumbs"),
+    navFrameClass: "".concat(rootElement, "__nav__frame"),
+    navFrameDotClass: "".concat(rootElement, "__nav__frame--dot"),
+    navFrameThumbClass: "".concat(rootElement, "__nav__frame--thumb"),
+    fadeClass: "".concat(rootElement, "__fade"),
+    fadeFrontClass: "".concat(rootElement, "__fade-front"),
+    fadeRearClass: "".concat(rootElement, "__fade-rear"),
+    shadowClass: "".concat(rootElement, "__shadow"),
+    shadowsClass: "".concat(rootElement, "__shadows"),
+    shadowsLeftClass: "".concat(rootElement, "__shadow--left"),
+    shadowsRightClass: "".concat(rootElement, "__shadow--right"),
+    activeClass: "".concat(rootElement, "__active"),
+    selectClass: "".concat(rootElement, "__select"),
+    hiddenClass: "".concat(rootElement, "--hidden"),
+    fullscreenClass: "".concat(rootElement, "--fullscreen"),
+    fullscreenIconClass: "".concat(rootElement, "__fullscreen-icon"),
+    errorClass: "".concat(rootElement, "__error"),
+    loadingClass: "".concat(rootElement, "__loading"),
+    loadedClass: "".concat(rootElement, "__loaded"),
+    loadedFullClass: "".concat(rootElement, "__loaded--full"),
+    loadedImgClass: "".concat(rootElement, "__loaded--img"),
+    grabbingClass: "".concat(rootElement, "__grabbing"),
+    imgClass: "".concat(rootElement, "__img"),
+    imgFullClass: "".concat(rootElement, "__img--full"),
+    dotClass: "".concat(rootElement, "__dot"),
+    thumbClass: "".concat(rootElement, "__thumb"),
+    thumbBorderClass: "".concat(rootElement, "__thumb-border"),
+    htmlClass: "".concat(rootElement, "__html"),
+    videoClass: "".concat(rootElement, "__video"),
+    videoPlayClass: "".concat(rootElement, "__video-play"),
+    videoCloseClass: "".concat(rootElement, "__video-close"),
+    captionClass: "".concat(rootElement, "__caption"),
+    captionWrapClass: "".concat(rootElement, "__caption__wrap"),
+    spinnerClass: "".concat(rootElement, "__spinner"),
+    buttonAttributes: "\" tabindex:\"0\" role:\"button",
 };
 
 function getTranslate(pos) {
@@ -305,7 +305,6 @@ var KEYBOARD_OPTIONS = {
     var NAV_DOT_FRAME_KEY = '$navDotFrame';
     var NAV_THUMB_FRAME_KEY = '$navThumbFrame';
     var AUTO = 'auto';
-    var fullScreenApi = new FullScreenApi();
     function bindTransitionEnd($el) {
         var elData = $el.data();
         if (elData.tEnd)
@@ -913,7 +912,7 @@ var KEYBOARD_OPTIONS = {
         $BODY = $('body');
         var that = this;
         var stamp = Date.now();
-        var stampClass = "".concat(globalClasses._fotoramaClass).concat(stamp);
+        var stampClass = "".concat(globalClasses.rootElement).concat(stamp);
         var fotorama = $fotorama[0], data, dataFrameCount = 1, fotoramaData = $fotorama.data(), size, $anchor = $(div(globalClasses.hiddenClass)), $wrap = $(div(globalClasses.wrapClass)), $stage = $(div(globalClasses.stageClass)).appendTo($wrap), $stageShaft = $(div(globalClasses.stageShaftClass)).appendTo($stage), $stageFrame = $(), $arrPrev = $(div(globalClasses.arrClass + ' ' + globalClasses.arrPrevClass + globalClasses.buttonAttributes)), $arrNext = $(div(globalClasses.arrClass + ' ' + globalClasses.arrNextClass + globalClasses.buttonAttributes)), $arrs = $arrPrev.add($arrNext).appendTo($stage), $navWrap = $(div(globalClasses.navWrapClass)), $nav = $(div(globalClasses.navClass)).appendTo($navWrap), $navShaft = $(div(globalClasses.navShaftClass)).appendTo($nav), $navFrame, $navDotFrame = $(), $navThumbFrame = $(), $thumbBorder = $(div(globalClasses.thumbBorderClass)).appendTo($navShaft), $fullscreenIcon = $(div(globalClasses.fullscreenIconClass + globalClasses.buttonAttributes)), fullscreenIcon = $fullscreenIcon[0], $videoPlay = $(div(globalClasses.videoPlayClass)), $videoClose = $(div(globalClasses.videoCloseClass)).appendTo($stage), videoClose = $videoClose[0], $videoPlaying, activeIndex = false, activeFrame, activeIndexes, repositionIndex, dirtyIndex, lastActiveIndex, prevIndex, nextIndex, nextAutoplayIndex, startIndex, o_loop, o_nav, o_navThumbs, o_navTop, o_allowFullScreen, o_nativeFullScreen, o_fade, o_transitionDuration, o_transition, o_shadows, o_rtl, o_keyboard, measures = {}, measuresSetFLAG, stageShaftTouchTail = {}, stageWheelTail = {}, navShaftTouchTail = {}, navWheelTail = {}, scrollTop, scrollLeft, showedFLAG, pausedAutoplayFLAG, stoppedAutoplayFLAG, toDeactivate = {}, toDetach = {}, measuresStash, touchedFLAG, hoverFLAG, navFrameKey, stageLeft = 0;
         var fadeStack = [];
         var $spinner = $(div(globalClasses.spinnerClass, 'Loading...'));
@@ -956,7 +955,7 @@ var KEYBOARD_OPTIONS = {
             return o_keyboard[key] || that.fullScreen;
         }
         function bindGlobalEvents(FLAG) {
-            var keydownCommon = 'keydown.' + globalClasses._fotoramaClass, localStamp = globalClasses._fotoramaClass + stamp, keydownLocal = 'keydown.' + localStamp, resizeLocal = 'resize.' + localStamp + ' ' + 'orientationchange.' + localStamp;
+            var keydownCommon = 'keydown.' + globalClasses.rootElement, localStamp = globalClasses.rootElement + stamp, keydownLocal = 'keydown.' + localStamp, resizeLocal = 'resize.' + localStamp + ' ' + 'orientationchange.' + localStamp;
             if (FLAG) {
                 $DOCUMENT
                     .on(keydownLocal, function (e) {
@@ -1004,14 +1003,13 @@ var KEYBOARD_OPTIONS = {
         function appendElements(FLAG) {
             if (FLAG === appendElements.flag)
                 return;
+            console.log(that);
             if (FLAG) {
                 $fotorama
                     .html('')
-                    .addClass("".concat(globalClasses._fotoramaClass, " ").concat(stampClass))
+                    .addClass("".concat(globalClasses.rootElement, " ").concat(stampClass))
                     .append($wrap)
                     .before($anchor);
-                console.log(that);
-                // addInstance(that);
             }
             else {
                 $wrap.detach();
@@ -1019,7 +1017,6 @@ var KEYBOARD_OPTIONS = {
                 $fotorama
                     .html(fotoramaData.urtext)
                     .removeClass(stampClass);
-                // hideInstance(that);
             }
             bindGlobalEvents(FLAG);
             appendElements.flag = FLAG;
@@ -1534,7 +1531,7 @@ var KEYBOARD_OPTIONS = {
             });
         }
         function triggerEvent(event, extra) {
-            $fotorama.trigger(globalClasses._fotoramaClass + ':' + event, [that, extra]);
+            $fotorama.trigger(globalClasses.rootElement + ':' + event, [that, extra]);
         }
         function onTouchStart() {
             clearTimeout(onTouchEnd.t);
@@ -1681,7 +1678,7 @@ var KEYBOARD_OPTIONS = {
                     overPos: overPos,
                     time: time,
                     onEnd: onEnd /*,
-                    _001: true*/
+                  _001: true*/
                 });
                 console.timeEnd('slide');
             }
@@ -2106,7 +2103,6 @@ var KEYBOARD_OPTIONS = {
             }
         }
         function changeToRtl() {
-            console.log('changeToRtl');
             if (!changeToRtl.f === o_rtl) {
                 changeToRtl.f = o_rtl;
                 activeIndex = size - 1 - activeIndex;
@@ -2138,7 +2134,10 @@ var KEYBOARD_OPTIONS = {
     };
     $.fn.fotorama = function (opts) {
         return this.each(function () {
-            var that = this, $fotorama = $(this), fotoramaData = $fotorama.data(), fotorama = fotoramaData.fotorama;
+            var that = this;
+            var $fotorama = $(this);
+            var fotoramaData = $fotorama.data();
+            var fotorama = fotoramaData.fotorama;
             if (!fotorama) {
                 waitFor(function () {
                     return !isHidden(that);
@@ -2153,27 +2152,10 @@ var KEYBOARD_OPTIONS = {
         });
     };
     $.Fotorama = {};
-    // $.Fotorama.instances = [];
-    // function calculateIndexes () {
-    //   $.each($.Fotorama.instances, function (index, instance) {
-    //     instance.index = index;
-    //   });
-    // }
-    // function addInstance (instance) {
-    //   $.Fotorama.instances.push(instance);
-    //   calculateIndexes();
-    // }
-    // function hideInstance (instance) {
-    //   $.Fotorama.instances.splice(instance.index, 1);
-    //   calculateIndexes();
-    // }
     $.Fotorama.cache = {};
     $.Fotorama.measures = {};
     $ = $ || {};
     $.Fotorama = $.Fotorama || {};
-    $(function () {
-        $(".".concat(globalClasses._fotoramaClass)).fotorama();
-    });
 })(document, location, typeof jQuery !== 'undefined' && jQuery);
 // Only function expression. Only utils func and clear functions
 // @todo move in separate file
@@ -2232,12 +2214,15 @@ function getDirectionSign(forward) {
     return forward ? '>' : '<';
 }
 function optionsToLowerCase(options) {
-    var opts = {};
-    Object.entries(options).forEach(function (_a) {
-        var key = _a[0], value = _a[1];
-        opts[key.toLowerCase()] = value;
-    });
-    return opts;
+    if (options) {
+        var opts_1 = {};
+        $.each(options, function (key, value) {
+            opts_1[key.toLowerCase()] = value;
+        });
+        return opts_1;
+    }
 }
-
-export { optionsToLowerCase };
+//init Fotorama render
+$(function () {
+    $(".".concat(globalClasses.rootElement)).fotorama();
+});

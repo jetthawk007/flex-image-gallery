@@ -1,5 +1,4 @@
 //@ts-nocheck
-
 export function createBezierEasingFunction(coordinateArray: number[]) {
     if (
         !Array.isArray(coordinateArray) ||
