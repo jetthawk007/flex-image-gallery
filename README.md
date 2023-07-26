@@ -1,1 +1,1 @@
-# react-image-gallery
+# flex-gallery
